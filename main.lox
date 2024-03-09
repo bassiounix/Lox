@@ -1,0 +1,11 @@
+// hello main function
+fun main(args) {
+    print args + 1;
+}
+
+main("Guess who");
+/* 
+/*
+ block comment
+
+*/
