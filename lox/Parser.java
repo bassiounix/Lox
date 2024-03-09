@@ -173,7 +173,7 @@ class Parser {
 
     private ParseError error(Token token, String message) {
         if (match(PLUS, STAR, SLASH, COMMA, EQUAL_EQUAL, BANG_EQUAL, GREATER, GREATER_EQUAL, LESS, LESS_EQUAL)) {
-            Lox.error(peek(), "Expected a left hand side expression");
+            Lox.error(previous(), "Expected a left hand side expression");
         }
 
         Lox.error(token, message);
