@@ -1,10 +1,11 @@
 package lox;
 
-class Interpreter implements Expr.Visitor<Object> {
-    void interpret(Expr expression) {
+import java.util.List;
+
+class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
+    void interpret(List<Stmt> statements) {
         try {
-            Object value = evaluate(expression);
-            System.out.println(stringify(value));
+            statements.forEach(this::execute);
         } catch (RuntimeError error) {
             Lox.runtimeError(error);
         }
@@ -91,6 +92,23 @@ class Interpreter implements Expr.Visitor<Object> {
         return expr.accept(this);
     }
 
+    private void execute(Stmt stmt) {
+        stmt.accept(this);
+    }
+
+    @Override
+    public Void visitExpressionStmt(Stmt.Expression stmt) {
+        evaluate(stmt.expression);
+        return null;
+    }
+
+    @Override
+    public Void visitPrintStmt(Stmt.Print stmt) {
+        Object value = evaluate(stmt.expression);
+        System.out.println(value);
+        return null;
+    }
+
     @Override
     public Object visitBinaryExpr(Expr.Binary expr) {
         Object left = evaluate(expr.left);
@@ -130,11 +148,11 @@ class Interpreter implements Expr.Visitor<Object> {
                 }
 
                 if (left instanceof String && right instanceof String) {
-                    return (String) left + (String) right;
+                    return left + (String) right;
                 }
 
                 if (left instanceof String && right instanceof Double) {
-                    return (String) left + stringify((Double) right);
+                    return left + stringify(right);
                 }
 
                 throw new RuntimeError(expr.operator, "Operands must be two numbers or two strings.");
@@ -162,4 +180,5 @@ class Interpreter implements Expr.Visitor<Object> {
         if (left instanceof Double && right instanceof Double) return;
         throw new RuntimeError(operator, "Operands must be numbers.");
     }
+
 }

@@ -1,11 +1,9 @@
-// hello main function
-fun main(args) {
-    print args + 1;
-}
+// hello program in Lox
 
-main("Guess who");
-/* 
+print "Hello, World";
+
 /*
- block comment
-
 */
+
+print true;
+print 2 + 1;
