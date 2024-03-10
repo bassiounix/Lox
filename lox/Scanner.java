@@ -108,6 +108,7 @@ class Scanner {
 
             if (currentCharMatches('\n')) {
                 line++;
+                continue;
             }
 
             consumeCurrentChar();
