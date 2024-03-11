@@ -24,3 +24,8 @@ var c = "global c";
 print a;
 print b;
 print c;
+
+var x = 3;
+
+if (x == 3)
+    print "x is 3";
