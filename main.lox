@@ -29,3 +29,11 @@ var x = 3;
 
 if (x == 3)
     print "x is 3";
+
+var i = 0;
+while (i < 10) {
+    print "Loop " + i;
+    if (i == 5)
+        break;
+    i = i + 1;
+}
