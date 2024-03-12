@@ -1,39 +1,8 @@
-// hello program in Lox
+var a = 0;
+var temp;
 
-print "Hello, World";
-
-/*
-*/
-
-var a = "global a";
-var b = "global b";
-var c = "global c";
-{
-  var a = "outer a";
-  var b = "outer b";
-  {
-    var a = "inner a";
-    print a;
-    print b;
-    print c;
-  }
+for (var b = 1; a < 10000; b = temp + b) {
   print a;
-  print b;
-  print c;
-}
-print a;
-print b;
-print c;
-
-var x = 3;
-
-if (x == 3)
-    print "x is 3";
-
-var i = 0;
-while (i < 10) {
-    print "Loop " + i;
-    if (i == 5)
-        break;
-    i = i + 1;
+  temp = a;
+  a = b;
 }
