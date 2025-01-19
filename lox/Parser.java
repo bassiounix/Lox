@@ -12,6 +12,7 @@ class Parser {
 
     private final List<Token> tokens;
     private int current = 0;
+    private int nestedLoopsCounter = 0;
 
     public Parser(List<Token> tokens) {
         this.tokens = tokens;
@@ -42,8 +43,21 @@ class Parser {
 
         if (match(LEFT_BRACE))
             return new Stmt.Block(block());
+        
+        if (match(BREAK)) {
+            return breakStatement();
+        }
 
         return expressionStatement();
+    }
+
+    private Stmt breakStatement() {
+        if (nestedLoopsCounter > 0) {
+            consume(SEMICOLON, "Expect ';' after break statement.");
+            return new Stmt.Break();
+        }
+
+        throw error(peek(), "break statement outside of loop.");
     }
 
     private Stmt forStatement() {
@@ -124,6 +138,7 @@ class Parser {
         Expr condition = expression();
         consume(RIGHT_PAREN, "Expect ')' after condition.");
         Stmt body = statement();
+        nestedLoopsCounter++;
 
         return new Stmt.While(condition, body);
     }

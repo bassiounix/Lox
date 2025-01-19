@@ -10,7 +10,10 @@ statement      → exprStmt
                | ifStmt
                | printStmt
                | whileStmt
+               | breakStmt
                | block ;
+
+breakStmt      → "break" ";" ;
 
 forStmt        → "for" "(" ( varDecl | exprStmt | ";" )
                  expression? ";"
