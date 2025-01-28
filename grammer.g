@@ -5,7 +5,7 @@ declaration    → classDecl
                | varDecl
                | statement ;
 
-classDecl      → "class" IDENTIFIER "{" ( "class"? function)* "}" ;
+classDecl      → "class" IDENTIFIER ( "<" IDENTIFIER )? "{" ( "class"? function)* "}" ;
 
 varDecl        → "var" IDENTIFIER ( "=" expression )? ";" ;
 
@@ -55,4 +55,5 @@ arguments      → expression ( "," expression )* ;
 primary        → "true" | "false" | "nil"
                | NUMBER | STRING
                | "(" expression ")"
+               | "super" "." IDENTIFIER
                | IDENTIFIER ;
