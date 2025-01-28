@@ -17,11 +17,16 @@ class LoxInstance {
         }
 
         LoxFunction method = klass.findMethod(name.lexeme());
-        if (method != null) {
-            return method.bind(this);
+
+        if (method == null) {
+            throw new RuntimeError(name, "Undefined property '" + name.lexeme() + "'.");
         }
 
-        throw new RuntimeError(name, "Undefined property '" + name.lexeme() + "'.");
+        if (method.isStatic()) {
+            throw new RuntimeError(name, "access of static method from class instance isn't allowed");
+        }
+
+        return method.bind(this);
     }
 
     void set(Token name, Object value) {
@@ -31,5 +36,9 @@ class LoxInstance {
     @Override
     public String toString() {
         return klass.name + " instance";
+    }
+
+    public void setKlass(LoxClass klass) {
+        this.klass = klass;
     }
 }

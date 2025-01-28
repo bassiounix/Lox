@@ -5,7 +5,7 @@ declaration    → classDecl
                | varDecl
                | statement ;
 
-classDecl      → "class" IDENTIFIER "{" function* "}" ;
+classDecl      → "class" IDENTIFIER "{" ( "class"? function)* "}" ;
 
 varDecl        → "var" IDENTIFIER ( "=" expression )? ";" ;
 

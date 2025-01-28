@@ -36,7 +36,8 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         NONE,
         FUNCTION,
         INITIALIZER,
-        METHOD
+        METHOD,
+        STATIC_METHOD
     }
 
     private enum ClassType {
@@ -66,6 +67,7 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         resolve(function.body);
 
         endScope();
+
         currentFunction = enclosingFunction;
     }
 
@@ -85,23 +87,27 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         declare(stmt.name);
         define(stmt.name);
 
-        beginScope();
-        scopes.peek().put(
-                "this",
-                new Variable(
-                        new Token(THIS, "this", stmt.name.literal(), stmt.name.line()),
-                        VariableState.READ));
-
         for (Stmt.Function method : stmt.methods) {
+            beginScope();
             FunctionType declaration = FunctionType.METHOD;
             if (method.name.lexeme().equals("init")) {
                 declaration = FunctionType.INITIALIZER;
             }
 
-            resolveFunction(method, declaration);
-        }
+            if (method.isStatic) {
+                declaration = FunctionType.STATIC_METHOD;
+            } else {
+                scopes.peek().put(
+                        "this",
+                        new Variable(
+                                new Token(THIS, "this", stmt.name.literal(), stmt.name.line()),
+                                VariableState.READ));
+            }
 
-        endScope();
+            resolveFunction(method, declaration);
+
+            endScope();
+        }
 
         currentClass = enclosingClass;
         return null;

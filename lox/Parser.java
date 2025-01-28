@@ -149,7 +149,11 @@ class Parser {
         return new Stmt.Expression(expr);
     }
 
-    private Stmt.Function function(String kind) {
+    private Stmt.Function function(String kind, boolean isStatic) {
+        if (isStatic) {
+            kind = "static " + kind;
+        }
+
         Token name = consume(IDENTIFIER, "Expect " + kind + " name.");
 
         consume(LEFT_PAREN, "Expect '(' after " + kind + " name.");
@@ -168,7 +172,7 @@ class Parser {
 
         consume(LEFT_BRACE, "Expect '{' before " + kind + " body.");
         List<Stmt> body = block();
-        return new Stmt.Function(name, parameters, body);
+        return new Stmt.Function(name, parameters, body, isStatic);
     }
 
     private List<Stmt> block() {
@@ -238,7 +242,7 @@ class Parser {
             }
 
             if (match(FUN))
-                return function("function");
+                return function("function", false);
 
             if (match(VAR))
                 return varDeclaration();
@@ -256,7 +260,7 @@ class Parser {
 
         List<Stmt.Function> methods = new ArrayList<>();
         while (!check(RIGHT_BRACE) && !isAtEnd()) {
-            methods.add(function("method"));
+            methods.add(function("method", match(CLASS)));
         }
 
         consume(RIGHT_BRACE, "Expect '}' after class body.");
