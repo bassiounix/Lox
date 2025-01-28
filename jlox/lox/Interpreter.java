@@ -1,4 +1,4 @@
-package lox;
+package jlox.lox;
 
 import java.util.List;
 import java.util.Map;
@@ -285,7 +285,7 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         if (stmt.value != null)
             value = evaluate(stmt.value);
 
-        throw new lox.Return(value);
+        throw new jlox.lox.Return(value);
     }
 
     @Override

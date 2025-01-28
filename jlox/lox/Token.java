@@ -1,4 +1,4 @@
-package lox;
+package jlox.lox;
 
 record Token(TokenType type, String lexeme, Object literal, int line) {
     @Override

@@ -1,7 +1,7 @@
-package lox;
+package jlox.lox;
 
-import static lox.TokenType.SUPER;
-import static lox.TokenType.THIS;
+import static jlox.lox.TokenType.SUPER;
+import static jlox.lox.TokenType.THIS;
 
 import java.util.HashMap;
 import java.util.List;
