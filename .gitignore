@@ -3,3 +3,4 @@ build
 # Project exclude paths
 /out/
 .vscode
+*.exe
