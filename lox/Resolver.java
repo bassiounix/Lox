@@ -37,7 +37,8 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         FUNCTION,
         INITIALIZER,
         METHOD,
-        STATIC_METHOD
+        STATIC_METHOD,
+        GETTER
     }
 
     private enum ClassType {
@@ -59,9 +60,15 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
         beginScope();
 
-        for (Token param : function.params) {
-            declare(param);
-            define(param);
+        if (type != FunctionType.GETTER) {
+            if (function.params == null) {
+                Lox.error(function.name, function.name.lexeme() + " is not a getter, parameters list must exist");
+            }
+
+            for (Token param : function.params) {
+                declare(param);
+                define(param);
+            }
         }
 
         resolve(function.body);
@@ -92,6 +99,10 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
             FunctionType declaration = FunctionType.METHOD;
             if (method.name.lexeme().equals("init")) {
                 declaration = FunctionType.INITIALIZER;
+            }
+
+            if (method.params == null) {
+                declaration = FunctionType.GETTER;
             }
 
             if (method.isStatic) {

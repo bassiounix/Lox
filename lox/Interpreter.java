@@ -204,7 +204,8 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
         Map<String, LoxFunction> methods = new HashMap<>();
         for (Stmt.Function method : stmt.methods) {
-            LoxFunction function = new LoxFunction(method, environment, method.name.lexeme().equals("init"), method.isStatic);
+            LoxFunction function = new LoxFunction(method, environment, method.name.lexeme().equals("init"),
+                    method.isStatic);
             methods.put(method.name.lexeme(), function);
         }
 
@@ -221,7 +222,7 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     @Override
     public Void visitFunctionStmt(Stmt.Function stmt) {
-        LoxFunction function = new LoxFunction(stmt, environment,false, stmt.isStatic);
+        LoxFunction function = new LoxFunction(stmt, environment, false, stmt.isStatic);
         environment.define(stmt.name.lexeme(), function);
         return null;
     }
@@ -384,7 +385,16 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     public Object visitGetExpr(Expr.Get expr) {
         Object object = evaluate(expr.object);
         if (object instanceof LoxInstance) {
-            return ((LoxInstance) object).get(expr.name);
+            Object get = ((LoxInstance) object).get(expr.name);
+
+            if (get instanceof LoxFunction) {
+                LoxFunction fn = (LoxFunction) get;
+                if (fn.isGetter()) {
+                    return fn.call(this, null);
+                }
+            }
+
+            return get;
         }
 
         throw new RuntimeError(expr.name,

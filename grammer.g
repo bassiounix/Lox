@@ -10,7 +10,7 @@ classDecl      → "class" IDENTIFIER "{" ( "class"? function)* "}" ;
 varDecl        → "var" IDENTIFIER ( "=" expression )? ";" ;
 
 funDecl        → "fun" function ;
-function       → IDENTIFIER "(" parameters? ")" block ;
+function       → IDENTIFIER ( "(" parameters? ")" )? block ;
 
 parameters     → IDENTIFIER ( "," IDENTIFIER )* ;
 
